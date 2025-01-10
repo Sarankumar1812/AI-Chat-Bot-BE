@@ -19,6 +19,8 @@ app.get("/", (req, res) => {
 // API endpoint to handle the chatbot request
 app.post("/api/chat", async (req, res) => {
   try {
+    console.log("Request body:", req.body);  // Log the incoming request body for debugging
+    
     const response = await axios.post(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
       req.body,
@@ -27,11 +29,20 @@ app.post("/api/chat", async (req, res) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-    console.log(response.data);
+    
+    console.log("API response:", response.data);  // Log the full API response for debugging
+    
     res.json(response.data);  // Send the data back as a JSON response
   } catch (error) {
     console.error("Error occurred:", error);  // Log error for better debugging
-    res.status(500).json({ error: error.message });  // Send error response if there's an issue
+    
+    // Check if the error has a response from the API
+    if (error.response) {
+      console.error("Error Response Data:", error.response.data);
+      res.status(error.response.status).json({ error: error.response.data });
+    } else {
+      res.status(500).json({ error: error.message });  // Send error response if there's an issue
+    }
   }
 });
 
