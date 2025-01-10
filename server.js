@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 // API endpoint to handle the chatbot request
-app.post("/api/chat", async (req, res) => {
+app.post("/", async (req, res) => {
   try {
     console.log("Request body:", req.body);  // Log the incoming request body for debugging
     
